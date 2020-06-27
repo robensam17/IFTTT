@@ -1,79 +1,100 @@
-<script>
 
-// server.js
-// where your node app starts
+<<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
 
-// init project
-var express = require('express');
-var request = require('request');
-var app = express();
-var iftttId;
-var baseURL = "https://maker.ifttt.com/trigger/";
-var withKey = "/with/key/";
-iftttId = "bMp9VABzV4W0H52LS30iym";
-// Get the Id from IFTTT Maker URL
-if(!process.env.IFTTT_MAKER_URL)
-  console.log("You need to set your IFTTT Maker URL - copy the URL from https://ifttt.com/services/maker/settings into the .env file against 'IFTTT_MAKER_URL'");
-else
-  iftttId = "bMp9VABzV4W0H52LS30iym";
+    <script>
+    // server.js
+    // where your node app starts
 
-  //process.env.IFTTT_MAKER_URL.split('https://maker.ifttt.com/use/')[1];
+    // init project
 
-// Show the homepage
-// http://expressjs.com/en/starter/static-files.html
-//app.use(express.static('views'));
+  //  var app = express();
+    var iftttId;
+    var baseURL = "https://maker.ifttt.com/trigger/";
+    var withKey = "/with/key/";
+    var iftttId = "bMp9VABzV4W0H52LS30iym";
+    // Get the Id from IFTTT Maker URL
+  //  if(!process.env.IFTTT_MAKER_URL)
+    //  console.log("You need to set your IFTTT Maker URL - copy the URL from https://ifttt.com/services/maker/settings into the .env file against 'IFTTT_MAKER_URL'");
+  //  else
+  //    iftttId = "bMp9VABzV4W0H52LS30iym";
 
-// Handle requests from IFTTT
-app.get("/", function (request, response) {
-  console.log("Request received from IFTTT");
-  console.log("Triggering multiple IFTTT services");
-  for(var i=0; i<10; i++){
-    checkForTrigger(i);
+      //process.env.IFTTT_MAKER_URL.split('https://maker.ifttt.com/use/')[1];
+
+    // Show the homepage
+    // http://expressjs.com/en/starter/static-files.html
+    //app.use(express.static('views'));
+      var triggerEvent = ["hardwarm", "Tv:on", "Fire:on", "lamp:on"];
+receiveTrigger();
+    // Handle requests from IFTTT
+  function receiveTrigger (request, response) {
+      console.log("Request received from IFTTT");
+      console.log("Triggering multiple IFTTT services");
+      for(var i=0; i<4; i++){
+        triggerEvent[i];
+console.log(triggerEvent[i]);
+if(triggerEvent){
+  var urlNew = baseURL + triggerEvent[i] + withKey + iftttId;
+  httpGetAsync(urlNew);
+  function httpGetAsync(urlNew, callback)
+  {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function() {
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+              callback(xmlHttp.responseText);
+      }
+      xmlHttp.open("GET", urlNew, true); // true for asynchronous
+      xmlHttp.send(null);
   }
-  console.log("Done triggering.");
-  response.end();
-});
+};
+      console.log("Done triggering.");
+    //  response.end();
+    };
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
 
-// Loops through each event and where it finds a value for it in .env it will make a request to IFTTT using it
-function checkForTrigger(trigger){
-  var triggerEvent;
 
-  if(trigger===0)
-    triggerEvent="hardwarm";
-    console.log(triggerEvent);
-  if(trigger===1)
-    triggerEvent=process.env.IFTTT_EVENT_2;
-  if(trigger===2)
-    triggerEvent=process.env.IFTTT_EVENT_3;
-  if(trigger===3)
-    triggerEvent=process.env.IFTTT_EVENT_4;
-  if(trigger===4)
-    triggerEvent=process.env.IFTTT_EVENT_5;
-  if(trigger===5)
-    triggerEvent=process.env.IFTTT_EVENT_6;
-  if(trigger===6)
-    triggerEvent=process.env.IFTTT_EVENT_7;
-  if(trigger===7)
-    triggerEvent=process.env.IFTTT_EVENT_8;
-  if(trigger===8)
-    triggerEvent=process.env.IFTTT_EVENT_9;
-  if(trigger===9)
-    triggerEvent=process.env.IFTTT_EVENT_10;
+/*    // Loops through each event and where it finds a value for it in .env it will make a request to IFTTT using it
+    function checkForTrigger(trigger){
+      var triggerEvent = ["hardwarm", "Tvon", "Fire:on", "lampon"]
 
-  if(triggerEvent){
-     //Make a request to baseURL + triggerEvent + withKey + iftttId, which is the complete IFTTT Maker Request URL
-    request(baseURL + triggerEvent + withKey + iftttId, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log(body); // Show the response from IFTTT
-      } else {
-        console.log(baseURL + triggerEvent + withKey + iftttId + ": "+error); // Show the error
-     }
-    });
-  }
-}
-</script>
+      if(trigger===0)
+        triggerEvent="hardwarm";
+        console.log(triggerEvent);
+      if(trigger===1)
+        triggerEvent="Tvon";
+      if(trigger===2)
+        triggerEvent="Fire:on";
+      if(trigger===3)
+        triggerEvent="lampon";
+
+      if(triggerEvent){
+        var urlNew = baseURL + triggerEvent[i] + withKey + iftttId;
+        httpGet(urlNew);
+        function httpGet(urlNew)
+{
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open( "GET", urlNew, false ); // false for synchronous request
+  xmlHttp.send( null );
+  return xmlHttp.responseText;
+};
+
+
+         //Make a request to baseURL + triggerEvent + withKey + iftttId, which is the complete IFTTT Maker Request URL
+         return(urlNew);
+      open(baseURL + triggerEvent + withKey + iftttId, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body); // Show the response from IFTTT
+          } else {
+            console.log(baseURL + triggerEvent + withKey + iftttId + ": "+error); // Show the error
+         }
+        });
+      }
+*/    }
+ </script>
+  </body>
+</html
